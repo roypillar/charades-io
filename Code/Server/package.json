@@ -7,7 +7,7 @@
     "dev": "concurrently --kill-others-on-fail \"npm server\" \"npm client\""
   },
   "dependencies": {
-    "axios": "^0.18.0",
+    "axios": "^0.18.1",
     "express": "*",
     "socket.io": "^2.1.1"
   },
