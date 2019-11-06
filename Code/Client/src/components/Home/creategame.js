@@ -1,6 +1,9 @@
 import React, {Component} from 'react';
 import { Redirect } from 'react-router-dom';
 import FormFields from './formfields';
+import shortid from 'shortid';
+
+
 
 class CreateGame extends Component {
     state = {
@@ -41,7 +44,9 @@ class CreateGame extends Component {
                     type: 'text',
                     placeholder: 'Your name'
                 }
-            }
+            },
+
+            
         }
     };
 
@@ -57,13 +62,19 @@ class CreateGame extends Component {
 
         const username = dataToSubmit.userName;
         const gameName = dataToSubmit.gameName;
+        const roomId = shortid.generate();
 
 
         this.setState((state) => {
             return {redirect: true,
                     username,
-                    gameName};
+                    gameName,
+                    roomId};
         });
+
+        
+        
+        
     
     }
 
@@ -89,6 +100,7 @@ class CreateGame extends Component {
             pathname : `/${this.state.roomId}`,
             state: {
                 userName: this.state.username,
+                gameName: this.state.gameName,
                 // cameFrom: this.props.location.state.title.split(' ')[0].toLowerCase()//i.e "join" or "create"
                 cameFrom: 'create'
             }}} />

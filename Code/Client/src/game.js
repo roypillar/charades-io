@@ -12,7 +12,8 @@ class Game extends Component {
         if (this.props.location.state) //if we have been redirected (normal control flow)
             this.state = {
                 roomId: this.props.match.params.id,
-                username: this.props.location.state.userName,
+                userName: this.props.location.state.userName,
+                gameName: this.props.location.state.gameName,
                 redirect: false,
                 cameFrom: this.props.location.state.cameFrom,
                 error: null
@@ -22,6 +23,9 @@ class Game extends Component {
                 redirect: true,
                 error: 'you haven\'t been assigned a username yet.'
             };
+        
+            console.log("rid"+this.state.roomId);
+            
     }
 
     renderRedirect() {
@@ -49,7 +53,7 @@ class Game extends Component {
     componentWillUnmount() {
         if (!this.state.redirect){
             this.state.socket.disconnect();
-            console.log(`${this.state.username} has disconnected from room ${this.state.roomId}`);
+            console.log(`${this.state.userName} has disconnected from room ${this.state.roomId}`);
         }
         else //pretty sure this is wrong: if we are kicking this guy out of here, he has no socket anyway
             console.log("game component unmounting");
@@ -59,7 +63,10 @@ class Game extends Component {
         if(this.state.redirect)
             return;
 
-        const username = this.state.username;
+        console.log(this.props.match.params);
+        
+
+        const userName = this.state.userName;
         const roomId = this.state.roomId;
         const cameFrom = this.state.cameFrom;
 
@@ -69,11 +76,11 @@ class Game extends Component {
         socket.on('connect', function () {
             console.log('camefrom',cameFrom);
             if(cameFrom === 'create'){
-                socket.emit('create_room', username, roomId);
+                socket.emit('create_room', userName, roomId);
                 // console.log(`${username} has created and joined room ${roomId}`);
             }
             else if(cameFrom === 'join'){
-                socket.emit('join_room', username, roomId);
+                socket.emit('join_room', userName, roomId);
                 // console.log(`${username} has joined room ${roomId}`);
             }
         });
@@ -96,6 +103,7 @@ class Game extends Component {
         return (
             <div>
                 {this.renderRedirect()}
+                <h1>{this.state.roomId}</h1>
                 
             </div>
         );
