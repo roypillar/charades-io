@@ -1,0 +1,10 @@
+const FAKE_SERVER_BASE_URL = "http://localhost:3004/"
+const SOCKET_IO_SERVER_URL = "http://127.0.0.1:5000"
+const ARTICLES_ADDRESS = FAKE_SERVER_BASE_URL+"articles"
+const TEAMS_ADDRESS = FAKE_SERVER_BASE_URL+"teams"
+
+export{
+    ARTICLES_ADDRESS,
+    TEAMS_ADDRESS,
+    SOCKET_IO_SERVER_URL
+}

@@ -1,0 +1,17 @@
+{
+  "name": "charades-server",
+  "version": "1.0.0",
+  "scripts": {
+    "client": "cd ../Client && npm start",
+    "server": "node server.js",
+    "dev": "concurrently --kill-others-on-fail \"npm server\" \"npm client\""
+  },
+  "dependencies": {
+    "axios": "^0.18.0",
+    "express": "*",
+    "socket.io": "^2.1.1"
+  },
+  "devDependencies": {
+    "concurrently": "^3.5.0"
+  }
+}

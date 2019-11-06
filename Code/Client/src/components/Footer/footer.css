@@ -1,0 +1,13 @@
+.footer{
+    margin-top:20px;
+    background: #242424;
+    color: #50c533;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.logo img {
+    height: 20px;
+    padding: 10px;
+}
