@@ -1,22 +1,26 @@
-const express = require('express');
 
+const express = require('express');
 const app = express();
 const server = require('http').createServer(app);
 const io = require('socket.io').listen(server);
-
 const port = process.env.PORT || 5000;
+const shortid = require('shortid');
 
-app.get('/', (req, res) => {
-    console.log("received connection");
-    res.send({"message": "hey chico"});
-});
+// not nessecary since using socket.io 
 
-app.get('/:id', function(req, res) {
+// app.get(__dirname + '/', (req, res) => {
+//     console.log("received connection");
+//     res.send({"message": "hey chico"});
+// });
 
-});
+// app.get(__dirname + '/:id', function(req, res) {
+
+// });
   
 connections = [];
 roomConnections = new Map(); 
+mockData = {team1:[], team2:[]};
+
 
 //TODO check this
 const checkAvailableUsername = (roomId, userName) => {
@@ -37,15 +41,15 @@ io.sockets.on('connection', function (socket) {
         socket.userName = userName;
         socket.gameName = gameName;
 
-        // if(roomConnections[roomId] !== null){
-        //     socket.emit('error','A room with that name already exists'); 
-        //     return;
-        // }
-        const roomId = Math.random().toString(36).substring(2, 15);
+        const roomId = shortid.generate();
         socket.roomId = roomId;
         socket.join(roomId);//TODO: randomize here
         roomConnections[roomId]= new Set();
         roomConnections[roomId].add(socket);
+        roomConnections[roomId].add();
+
+
+        socket.emit('room_created', socket.roomId);
 
         console.log(`user ${userName} has created and joined room ${roomId}`);
 
@@ -74,6 +78,17 @@ io.sockets.on('connection', function (socket) {
 
         console.log(`user ${userName} has joined room ${roomId}`);
     })
+
+
+    //TODO: notify all connections to the room with 'player_joined_team
+    socket.on('join_team', (userName,teamNum)=> {
+        const teamKey = 'team'+teamNum;
+        mockData[teamKey].push(userName);
+        console.log("mockdata",mockData);
+        socket.emit('player_joined_team',(mockData));
+    });
+
+    
 
     //todo : prevent creation of same name rooms, same users
 

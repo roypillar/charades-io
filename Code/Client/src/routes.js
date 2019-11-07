@@ -4,7 +4,7 @@ import { Route, Switch } from 'react-router-dom';
 
 import Home from './components/Home/home';
 import Layout from './hoc/Layout/layout';
-import Game from './game';
+import Game from './components/Game/game';
 import JoinGame from './components/Home/joingame';
 import CreateGame from './components/Home/creategame';
 
