@@ -51,7 +51,7 @@ io.sockets.on('connection', function (socket) {
 
         socket.emit('room_created', socket.roomId);
 
-        console.log(`user ${userName} has created and joined room ${roomId}`);
+        console.log(`user ${userName} has created and joined game: ${gameName}. roomId: ${roomId}`);
 
     });
 
@@ -76,7 +76,7 @@ io.sockets.on('connection', function (socket) {
         socket.join(roomId);
         roomConnections[roomId].add(socket);
 
-        console.log(`user ${userName} has joined room ${roomId}`);
+        console.log(`user ${userName} has joined game: ${gameName}. roomId: ${roomId}`);
     })
 
 
