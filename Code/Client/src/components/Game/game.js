@@ -1,9 +1,9 @@
-import React, {Component} from 'react';
-import {Redirect} from 'react-router-dom';
+import React, { Component } from 'react';
+import { Redirect } from 'react-router-dom';
 import Teams from './Teams'
-import {SOCKET_IO_SERVER_URL} from '../../remote/addresses';
+import { SOCKET_IO_SERVER_URL } from '../../remote/addresses';
 import io from "socket.io-client";
-import {setUpSocketHandlers} from "./util/io.js";
+import { setUpSocketHandlers } from "../../io/io.js";
 
 class Game extends Component {
 
