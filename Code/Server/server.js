@@ -5,17 +5,6 @@ const server = require('http').createServer(app);
 const io = require('socket.io').listen(server);
 const port = process.env.PORT || 5000;
 const shortid = require('shortid');
-
-// not nessecary since using socket.io 
-
-// app.get(__dirname + '/', (req, res) => {
-//     console.log("received connection");
-//     res.send({"message": "hey chico"});
-// });
-
-// app.get(__dirname + '/:id', function(req, res) {
-
-// });
   
 connections = [];
 roomConnections = new Map(); 

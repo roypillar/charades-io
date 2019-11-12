@@ -1,9 +1,9 @@
-import React, {Component} from 'react';
-import {Redirect} from 'react-router-dom';
+import React, { Component } from 'react';
+import { Redirect } from 'react-router-dom';
 import Teams from './Teams'
-import {SOCKET_IO_SERVER_URL} from '../../remote/addresses';
+import { SOCKET_IO_SERVER_URL } from '../../remote/addresses';
 import io from "socket.io-client";
-import {setUpSocketHandlers} from "./util/io.js";
+import { setUpSocketHandlers } from "../io/io.js";
 
 class Game extends Component {
 
@@ -19,8 +19,8 @@ class Game extends Component {
                 userName: this.props.location.state.userName,
                 gameName: this.props.location.state.gameName,
                 teams: {
-                    team1: ['shoshi'],
-                    team2: ['gigi']
+                    team1: [],
+                    team2: []
                 },
                 redirect: false,
                 cameFrom: this.props.location.state.cameFrom,
@@ -31,10 +31,12 @@ class Game extends Component {
                 redirect: true,
                 error: 'you haven\'t been assigned a username yet.'
             };
-        
-            
     }
 
+    setRoomId = (roomId) => {
+        this.setState({roomId: roomId});
+        console.log("setRoomId was called, room id: " + this.state.roomId);
+    }
 
     renderRedirect() {
         if (this.state.redirect) {
@@ -48,11 +50,6 @@ class Game extends Component {
         }
 
         return null;
-    }
-
-    setRoomId = (roomId) => {
-        this.setState({roomId: roomId});
-        console.log("setRoomId was called, room id: " + this.state.roomId);
     }
 
     componentWillUnmount() {
@@ -71,6 +68,7 @@ class Game extends Component {
         setUpSocketHandlers(this);
 
     }
+
 
 
     onJoinTeam(teamNumber) {
