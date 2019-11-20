@@ -9,7 +9,7 @@ export class Teams extends Component {
         return (
             <div style={this.teamsStyle}>
                 <Team teamNumber='1' players={players1} onJoinTeam={this.props.onJoinTeam}/>
-                <Team teamNumber='2' players={players2} onJoinTeam={this.props.onJoinTeam} />
+                <Team teamNumber='2' players={players2} onJoinTeam={this.props.onJoinTeam}/>
             </div>
         )
     }

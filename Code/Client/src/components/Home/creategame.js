@@ -71,24 +71,8 @@ class CreateGame extends Component {
                     gameName,
                     roomId};
         });
-
-        
-        
-        
     
     }
-
-    // changeHandler = (e) => {
-    //     switch (e.target.id) {
-    //         case "game_name":
-    //             break;
-    //         case "user_name":
-    //             break;
-    //         default:
-    //             break;
-    //     }
-    //     return;
-    // }
 
     updateForm = (newState) => {
         this.setState({formData: newState});
@@ -101,7 +85,6 @@ class CreateGame extends Component {
             state: {
                 userName: this.state.username,
                 gameName: this.state.gameName,
-                // cameFrom: this.props.location.state.title.split(' ')[0].toLowerCase()//i.e "join" or "create"
                 cameFrom: 'create'
             }}} />
         }
