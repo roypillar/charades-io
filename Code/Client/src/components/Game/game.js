@@ -4,12 +4,13 @@ import Teams from './Teams'
 import { SOCKET_IO_SERVER_URL } from '../../remote/addresses';
 import io from "socket.io-client";
 import { setUpSocketHandlers } from "../../io/io.js";
+import FormFields from '../Home/formfields';
 
 class Game extends Component {
 
     constructor(props) {
         super(props);
-        console.log(this.props);
+        
         const socket = io(SOCKET_IO_SERVER_URL);
         
         if (this.props.location.state) //if we have been redirected (normal control flow)
@@ -18,14 +19,16 @@ class Game extends Component {
                 roomId: this.props.match.params.id,
                 userName: this.props.location.state.userName,
                 gameName: this.props.location.state.gameName,
+                started: false,
                 teams: {
-                    team1: ['shoshi'],
-                    team2: ['gigi']
+                    team1: [],
+                    team2: []
                 },
                 redirect: false,
                 cameFrom: this.props.location.state.cameFrom,
                 error: null
             }
+
         else //otherwise, we will be redirected back to home screen.
             this.state = {
                 redirect: true,
@@ -69,13 +72,36 @@ class Game extends Component {
             return;
         
         setUpSocketHandlers(this);
-
     }
 
 
     onJoinTeam(teamNumber) {
         //notify server
-        this.state.socket.emit('join_team',this.state.userName,teamNumber);
+        this.state.socket.emit('join_team',teamNumber);
+    }
+
+    
+    submitNote(e){
+        e.preventDefault();
+        console.log(e);
+
+    }
+
+    renderGame() {
+        if(!this.state.started){
+            return (
+                <div>
+                    <Teams  onJoinTeam={this.onJoinTeam.bind(this)} teams={this.state.teams}/>
+                    <form onSubmit={this.submitNote}>
+                        <input name="noteInput" placeholder="new note"></input>
+                        <button type="submit">Submit</button>
+                    </form>
+                </div>
+            )
+        }
+        else{
+            //TODO render game phase
+        }
     }
 
     render() {
@@ -84,7 +110,7 @@ class Game extends Component {
                 {this.renderRedirect()}
                 <h1>{this.state.gameName}</h1>
                 <h3>Access code: {this.state.roomId}</h3>
-                <Teams  onJoinTeam={this.onJoinTeam.bind(this)} teams={this.state.teams}/>
+                {this.renderGame()}
             </div>
         );
     }

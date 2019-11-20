@@ -28,11 +28,6 @@ export class Team extends Component {
         }
     }
 
-    
-
-    // joinTeam() {
-    //     this.setState({players: [...this.state.players,]})
-    // }
 
     render() {
         return (
