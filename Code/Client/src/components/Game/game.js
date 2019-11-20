@@ -34,10 +34,12 @@ class Game extends Component {
                 redirect: true,
                 error: 'you haven\'t been assigned a username yet.'
             };
-        
-            
     }
 
+    setRoomId = (roomId) => {
+        this.setState({roomId: roomId});
+        console.log("setRoomId was called, room id: " + this.state.roomId);
+    }
 
     renderRedirect() {
         if (this.state.redirect) {
@@ -51,11 +53,6 @@ class Game extends Component {
         }
 
         return null;
-    }
-
-    setRoomId = (roomId) => {
-        this.setState({roomId: roomId});
-        console.log("setRoomId was called, room id: " + this.state.roomId);
     }
 
     componentWillUnmount() {
@@ -73,6 +70,7 @@ class Game extends Component {
         
         setUpSocketHandlers(this);
     }
+
 
 
     onJoinTeam(teamNumber) {

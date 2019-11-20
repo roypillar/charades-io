@@ -4,8 +4,7 @@ const server = require('http').createServer(app);
 const io = require('socket.io').listen(server);
 const port = process.env.PORT || 5000;
 const shortid = require('shortid');
-
-
+  
 connections = [];
 roomConnections = new Map();
 mockData = {

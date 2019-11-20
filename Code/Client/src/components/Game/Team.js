@@ -3,22 +3,9 @@ import React, { Component } from 'react';
 
 export class Team extends Component {
     
-    state = {
-        teamNumber: this.props.teamNumber,
-        players: this.props.players
-    }
-    
-
-
-    componentDidUpdate(prevProps) {
-        
-        if (prevProps.players !== this.props.players) {
-          this.setState({players: this.props.players});
-        }
-      }
 
     renderPlayers() {
-        const players = this.state.players;
+        const players = this.props.players;
         if(players.len !== 0){
             return (
                 <ul>
@@ -32,8 +19,8 @@ export class Team extends Component {
     render() {
         return (
             <div style={this.teamStyle}>
-                <h2 style={{marginBottom: 0}}>Team {this.state.teamNumber}</h2>
-                <button onClick={this.props.onJoinTeam.bind(this,this.state.teamNumber)}>Join team</button>
+                <h2 style={{marginBottom: 0}}>Team {this.props.teamNumber}</h2>
+                <button onClick={this.props.onJoinTeam.bind(this, this.props.teamNumber)}>Join team</button>
                 
                     {this.renderPlayers()}
                 
