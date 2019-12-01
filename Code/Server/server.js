@@ -7,10 +7,11 @@ const shortid = require('shortid');
   
 connections = [];
 roomConnections = new Map();
-mockData = {
+teams = {
     team1: [],
     team2: []
 };
+notes = [];
 
 
 //TODO check this
@@ -74,10 +75,10 @@ function onConnect(socket) {
     socket.on('join_team', (teamNum) => {
         const teamKey = 'team' + teamNum;
 
-        mockData[teamKey].push(socket.userName);
+        teams[teamKey].push(socket.userName);
         
         // broadcast to all the clients in the room of the change 
-        io.to(socket.roomId).emit('player_joined_team', mockData);
+        io.to(socket.roomId).emit('player_joined_team', teams);
         
     });
 
@@ -95,6 +96,10 @@ function onConnect(socket) {
 
         connections.splice(connections.indexOf(socket), 1);
         console.log(`disconnection: ${connections.length} connections`);
+    })
+
+    socket.on('new_note', function (note) {
+        notes.push(note);
     })
 };
 

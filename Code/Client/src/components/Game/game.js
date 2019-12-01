@@ -3,7 +3,7 @@ import { Redirect } from 'react-router-dom';
 import Teams from './Teams'
 import { SOCKET_IO_SERVER_URL } from '../../remote/addresses';
 import io from "socket.io-client";
-import { setUpSocketHandlers } from "../../io/io.js";
+import { setUpSocketHandlers } from "../../socketIO/socketSetup.js";
 import FormFields from '../Home/formfields';
 
 class Game extends Component {
@@ -24,6 +24,7 @@ class Game extends Component {
                     team1: [],
                     team2: []
                 },
+                note: '',
                 redirect: false,
                 cameFrom: this.props.location.state.cameFrom,
                 error: null
@@ -78,21 +79,32 @@ class Game extends Component {
         this.state.socket.emit('join_team',teamNumber);
     }
 
-    
+    handleNoteChange(e){
+        e.preventDefault();
+        console.log("note changed to " +e.target.value)
+        this.setState({note: e.target.value})
+    }
+
     submitNote(e){
         e.preventDefault();
-        console.log("note submitted");
+        console.log("hi "+ this.state.note)
+        const note = this.state.note
+        this.state.socket.emit('new_note', note)
+        
+        //clear input field
+        this.setState({note: ''})
     }
 
     renderGame() {
         if(!this.state.started){
             return (
                 <div>
-                    <Teams  onJoinTeam={this.onJoinTeam.bind(this)} teams={this.state.teams}/>
-                    <form onSubmit={this.submitNote}>
-                        <input name="noteInput" placeholder="new note"></input>
+                    <Teams  teams={this.state.teams} onJoinTeam={this.onJoinTeam.bind(this)} />
+
+                    <form onSubmit={this.submitNote.bind(this)}>
+                        <input name="note" value={this.state.note} placeholder="new note" onChange={this.handleNoteChange.bind(this)}/>
                         <button type="submit">Submit</button>
-                    </form>
+                    </form> 
                 </div>
             )
         }
