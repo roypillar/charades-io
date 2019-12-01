@@ -81,7 +81,7 @@ class Game extends Component {
     
     submitNote(e){
         e.preventDefault();
-
+        console.log("note submitted");
     }
 
     renderGame() {
