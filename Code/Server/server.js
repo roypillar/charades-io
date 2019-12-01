@@ -43,6 +43,7 @@ function onConnect(socket) {
 
         socket.emit('room_created', socket.roomId);
 
+
     });
 
     socket.on('join_room', function (userName, roomId) {
@@ -66,7 +67,7 @@ function onConnect(socket) {
         socket.join(roomId);
         roomConnections[roomId].add(socket);
 
-        console.log(`user ${userName} has joined room ${roomId}`);
+        console.log(`user ${userName} has joined game: ${gameName}. roomId: ${roomId}`);
     })
 
 
