@@ -1,22 +1,20 @@
+const Room = require('./Room.js');
 const express = require('express');
 const app = express();
 const server = require('http').createServer(app);
 const io = require('socket.io').listen(server);
 const port = process.env.PORT || 5000;
 const shortid = require('shortid');
+
+
   
 connections = [];
-roomConnections = new Map();
-teams = {
-    team1: [],
-    team2: []
-};
-notes = [];
+rooms = new Map();
 
 
 //TODO check this
 const checkAvailableUsername = (roomId, userName) => {
-    roomConnections[roomId].forEach(socket => {
+    rooms[roomId].forEach(socket => {
         if (socket.userName === userName)
             return false;
     });
@@ -40,11 +38,9 @@ function onConnect(socket) {
         socket.roomId = roomId;
         //join the room so the server can broadcast to all the room's participants
         socket.join(roomId);
-        roomConnections[roomId] = new Set([socket]);
+        rooms.set(roomId, new Room(roomId));
 
         socket.emit('room_created', socket.roomId);
-
-
     });
 
     socket.on('join_room', function (userName, roomId) {
@@ -59,14 +55,13 @@ function onConnect(socket) {
         socket.roomId = roomId;
 
         //check room availability
-        if (!roomConnections[roomId]) {
+        if (rooms.has(roomId)) {
             socket.emit('some_error', 'There is no such room.');
             console.log(`${userName} tried to join non existant room ${roomId}, emitting error`);
             return;
         }
 
         socket.join(roomId);
-        roomConnections[roomId].add(socket);
 
         console.log(`user ${userName} has joined game: ${gameName}. roomId: ${roomId}`);
     })
@@ -74,20 +69,11 @@ function onConnect(socket) {
 
     socket.on('join_team', (teamNum) => {
         const teamKey = 'team' + teamNum;
+        let room = rooms.get(socket.roomId);
+        room.joinTeam(socket.userName,teamKey);
 
-        //if player requesting join is already on a team, remove player from it
-        for(let team in teams){
-                const index = teams[team].indexOf(socket.userName);
-                if (index > -1) {
-                    teams[team].splice(index, 1);
-                } 
-        }
-        
-        teams[teamKey].push(socket.userName);
-        
         // broadcast to all the clients in the room of the change 
-        io.to(socket.roomId).emit('player_joined_team', teams);
-        
+        io.to(socket.roomId).emit('player_joined_team', room.getAllPlayers());
     });
 
     //todo : prevent creation of same name rooms, same users
@@ -97,7 +83,7 @@ function onConnect(socket) {
         console.log(`user ${socket.userName} disconnected`);
         //TODO: why though?:
 
-        roomConnections[socket.roomId].delete(socket);
+        rooms.delete(socket.roomId);
         socket.userName = null;
         socket.roomId = null;
         socket.gameName = null;
@@ -107,7 +93,8 @@ function onConnect(socket) {
     })
 
     socket.on('new_note', function (note) {
-        notes.push(note);
+        let noteNum = rooms.get(socket.roomId).addNote(note);
+        console.log("noteNUm " + noteNum);
     })
 };
 
