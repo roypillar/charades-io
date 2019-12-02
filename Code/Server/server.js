@@ -75,6 +75,14 @@ function onConnect(socket) {
     socket.on('join_team', (teamNum) => {
         const teamKey = 'team' + teamNum;
 
+        //if player requesting join is already on a team, remove player from it
+        for(let team in teams){
+                const index = teams[team].indexOf(socket.userName);
+                if (index > -1) {
+                    teams[team].splice(index, 1);
+                } 
+        }
+        
         teams[teamKey].push(socket.userName);
         
         // broadcast to all the clients in the room of the change 
