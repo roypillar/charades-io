@@ -1,12 +1,9 @@
 
-
-body {
-    font-family: Helvetica, sans-serif;
-    line-height: 1.4;
+body{
+    margin: 50%;
+    background-color: aquamarine;
 }
 
-.Team {
-    margin: 50%;
-    color: aquamarine;
-    background-color: blueviolet;
+.start{
+    margin-top: 20px;
 }

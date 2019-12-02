@@ -4,7 +4,7 @@ import Teams from './Teams'
 import { SOCKET_IO_SERVER_URL } from '../../remote/addresses';
 import io from "socket.io-client";
 import { setUpSocketHandlers } from "../../socketIO/socketSetup.js";
-import FormFields from '../Home/formfields';
+import Button from '@material-ui/core/Button';
 
 class Game extends Component {
 
@@ -13,7 +13,12 @@ class Game extends Component {
         
         const socket = io(SOCKET_IO_SERVER_URL);
         
-        if (this.props.location.state) //if we have been redirected (normal control flow)
+        this.handleNoteChange = this.handleNoteChange.bind(this)
+        this.onJoinTeam = this.onJoinTeam.bind(this)
+        this.submitNote = this.submitNote.bind(this)
+        this.startGame = this.startGame.bind(this)
+
+        if (this.props.location.state){ //if we have been redirected (normal control flow)
             this.state = {
                 socket: socket,
                 roomId: this.props.match.params.id,
@@ -29,6 +34,9 @@ class Game extends Component {
                 cameFrom: this.props.location.state.cameFrom,
                 error: null
             }
+
+            
+        }
 
         else //otherwise, we will be redirected back to home screen.
             this.state = {
@@ -81,18 +89,21 @@ class Game extends Component {
 
     handleNoteChange(e){
         e.preventDefault();
-        console.log("note changed to " +e.target.value)
         this.setState({note: e.target.value})
     }
 
     submitNote(e){
         e.preventDefault();
-        console.log("hi "+ this.state.note)
         const note = this.state.note
         this.state.socket.emit('new_note', note)
         
         //clear input field
         this.setState({note: ''})
+    }
+
+    startGame(e){
+        e.preventDefault();
+        this.setState({started: true})
     }
 
     renderGame() {
@@ -102,14 +113,20 @@ class Game extends Component {
                     <Teams  teams={this.state.teams} onJoinTeam={this.onJoinTeam.bind(this)} />
 
                     <form onSubmit={this.submitNote.bind(this)}>
-                        <input name="note" value={this.state.note} placeholder="new note" onChange={this.handleNoteChange.bind(this)}/>
+                        <input name="note" value={this.state.note} placeholder="new note" onChange={this.handleNoteChange}/>
                         <button type="submit">Submit</button>
-                    </form> 
+                    </form>
+                    <button type="button" onClick={this.startGame}>Start</button> 
                 </div>
             )
         }
         else{
-            //TODO render game phase
+            //TODO: render current round game page
+            return (
+                <div>
+
+                </div>
+            )
         }
     }
 
