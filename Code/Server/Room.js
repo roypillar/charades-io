@@ -23,6 +23,16 @@ class Room{
         
     }
 
+    isAvailableName(userName){
+        for(let team in this.teams){
+            if(this.teams[team].players.includes(userName)){
+                return false;
+            }
+        }
+
+        return true;
+    }
+
     getAllPlayers(){
         return {team1: this.teams.team1.players, team2: this.teams.team2.players}
     }

@@ -8,18 +8,9 @@ const shortid = require('shortid');
 
 
   
-connections = [];
-rooms = new Map();
+const connections = [];
+const rooms = new Map();
 
-
-//TODO check this
-const checkAvailableUsername = (roomId, userName) => {
-    rooms[roomId].forEach(socket => {
-        if (socket.userName === userName)
-            return false;
-    });
-    return true;
-}
 
 io.sockets.on('connection', onConnect)
 
@@ -40,13 +31,21 @@ function onConnect(socket) {
         socket.join(roomId);
         rooms.set(roomId, new Room(roomId));
 
+        console.log(rooms)
         socket.emit('room_created', socket.roomId);
     });
 
     socket.on('join_room', function (userName, roomId) {
 
-        if (!checkAvailableUsername(roomId, userName)) {
-            console.log("USERNAME: " + userName);
+        console.log(rooms)
+        if (!rooms.has(roomId)) {
+            socket.emit('some_error', 'There is no such room.');
+            console.log(`${userName} tried to join non existant room ${roomId}, emitting error`);
+            return;
+        }
+
+        if (!rooms.get(roomId).isAvailableName(userName)) {
+            console.log("A USER TRIED JOINING THE ROOM WITH EXISTING NAME: " + userName +);
             socket.emit('some_error', 'A user with the same username already exists in this room.');
             return;
         }
@@ -55,15 +54,11 @@ function onConnect(socket) {
         socket.roomId = roomId;
 
         //check room availability
-        if (rooms.has(roomId)) {
-            socket.emit('some_error', 'There is no such room.');
-            console.log(`${userName} tried to join non existant room ${roomId}, emitting error`);
-            return;
-        }
+        
 
         socket.join(roomId);
 
-        console.log(`user ${userName} has joined game: ${gameName}. roomId: ${roomId}`);
+        //console.log(`user ${userName} has joined game: ${gameName}. roomId: ${roomId}`);
     })
 
 
