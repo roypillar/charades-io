@@ -3,8 +3,7 @@ import { Redirect } from 'react-router-dom';
 import Teams from './Teams'
 import { SOCKET_IO_SERVER_URL } from '../../remote/addresses';
 import io from "socket.io-client";
-import { setUpSocketHandlers } from "../../socketIO/socketSetup.js";
-import Button from '@material-ui/core/Button';
+import { setupSocketHandlers } from "../socket/socketHandlers.js";
 
 class Game extends Component {
 
@@ -77,7 +76,7 @@ class Game extends Component {
         if(this.state.redirect)
             return;
         
-        setUpSocketHandlers(this);
+        setupSocketHandlers(this);
     }
 
 
@@ -89,21 +88,22 @@ class Game extends Component {
 
     handleNoteChange(e){
         e.preventDefault();
-        this.setState({note: e.target.value})
+        this.setState({note: e.target.value});
     }
 
     submitNote(e){
         e.preventDefault();
-        const note = this.state.note
-        this.state.socket.emit('new_note', note)
+        const note = this.state.note;
+        this.state.socket.emit('new_note', note);
         
         //clear input field
-        this.setState({note: ''})
+        this.setState({note: ''});
     }
 
     startGame(e){
         e.preventDefault();
-        this.setState({started: true})
+        this.setState({started: true});
+        this.state.socket.emit('start_game');
     }
 
     renderGame() {
@@ -124,7 +124,7 @@ class Game extends Component {
             //TODO: render current round game page
             return (
                 <div>
-
+                    <h1>game phase</h1>
                 </div>
             )
         }

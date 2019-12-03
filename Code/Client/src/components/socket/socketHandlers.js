@@ -1,9 +1,8 @@
 
 
-export function setUpSocketHandlers(component) {
+export function setupSocketHandlers(component) {
 
     const {socket, cameFrom, userName, gameName, roomId} = component.state;
-    console.log(component.state);
     
     socket.on('connect', function () {
         console.log('camefrom',cameFrom);
@@ -31,8 +30,11 @@ export function setUpSocketHandlers(component) {
     });
 
     socket.on('player_joined_team', (data) => {
-        console.log('data from server : ',data);
-        component.setState({teams: data})
+        component.setState({teams: data});
+    });
+
+    socket.on('game_started', () =>{
+        component.setState({started: true});
     });
 }
 

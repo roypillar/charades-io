@@ -31,13 +31,11 @@ function onConnect(socket) {
         socket.join(roomId);
         rooms.set(roomId, new Room(roomId));
 
-        console.log(rooms)
         socket.emit('room_created', socket.roomId);
     });
 
     socket.on('join_room', function (userName, roomId) {
 
-        console.log(rooms)
         if (!rooms.has(roomId)) {
             socket.emit('some_error', 'There is no such room.');
             console.log(`${userName} tried to join non existant room ${roomId}, emitting error`);
@@ -45,7 +43,7 @@ function onConnect(socket) {
         }
 
         if (!rooms.get(roomId).isAvailableName(userName)) {
-            console.log("A USER TRIED JOINING THE ROOM WITH EXISTING NAME: " + userName +);
+            console.log("A USER TRIED JOINING THE ROOM WITH EXISTING NAME: " + userName);
             socket.emit('some_error', 'A user with the same username already exists in this room.');
             return;
         }
@@ -53,12 +51,10 @@ function onConnect(socket) {
         socket.userName = userName;
         socket.roomId = roomId;
 
-        //check room availability
-        
-
+        //TODO: check room availability
+    
         socket.join(roomId);
 
-        //console.log(`user ${userName} has joined game: ${gameName}. roomId: ${roomId}`);
     })
 
 
@@ -89,7 +85,11 @@ function onConnect(socket) {
 
     socket.on('new_note', function (note) {
         let noteNum = rooms.get(socket.roomId).addNote(note);
-        console.log("noteNUm " + noteNum);
+    })
+
+    socket.on('start_game', () => {
+        rooms.get(socket.roomId).gameStart();
+        io.to(socket.roomId).emit('game_started');
     })
 };
 

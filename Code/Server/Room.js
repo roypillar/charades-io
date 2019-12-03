@@ -23,6 +23,10 @@ class Room{
         
     }
 
+    gameStart(){
+        
+    }
+
     isAvailableName(userName){
         for(let team in this.teams){
             if(this.teams[team].players.includes(userName)){
