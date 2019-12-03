@@ -20,7 +20,7 @@ export class Team extends Component {
         return (
             <div style={this.teamStyle}>
                 <h2 style={{marginBottom: 0}}>Team {this.props.teamNumber}</h2>
-                <button onClick={this.props.onJoinTeam.bind(this, this.props.teamNumber)}>Join team</button>
+                <button onClick={() => this.props.onJoinTeam(this.props.teamNumber)}>Join team</button>
                 
                     {this.renderPlayers()}
                 
@@ -34,4 +34,4 @@ export class Team extends Component {
     }
 }
 
-export default Team
+export default Team;

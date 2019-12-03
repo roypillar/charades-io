@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Redirect } from 'react-router-dom';
-import Teams from './Teams'
+import Teams from './Teams.js'
+import Timer from './Timer.js'
 import { SOCKET_IO_SERVER_URL } from '../../remote/addresses';
 import io from "socket.io-client";
 import { setupSocketHandlers } from "../socket/socketHandlers.js";
@@ -16,6 +17,7 @@ class Game extends Component {
         this.onJoinTeam = this.onJoinTeam.bind(this)
         this.submitNote = this.submitNote.bind(this)
         this.startGame = this.startGame.bind(this)
+        this.draw = this.draw.bind(this)
 
         if (this.props.location.state){ //if we have been redirected (normal control flow)
             this.state = {
@@ -24,6 +26,8 @@ class Game extends Component {
                 userName: this.props.location.state.userName,
                 gameName: this.props.location.state.gameName,
                 started: false,
+                startTimer: false,
+                team: false,
                 teams: {
                     team1: [],
                     team2: []
@@ -105,6 +109,11 @@ class Game extends Component {
         this.setState({started: true});
         this.state.socket.emit('start_game');
     }
+    
+    draw(e){
+        e.preventDefault();
+        this.state.socket.emit('draw');
+    }
 
     renderGame() {
         if(!this.state.started){
@@ -120,13 +129,19 @@ class Game extends Component {
                 </div>
             )
         }
+
         else{
-            //TODO: render current round game page
+            //this should only render to the current mimer
             return (
                 <div>
                     <h1>game phase</h1>
+                    <Timer startTimer={this.state.startTimer}></Timer>
+                    <button type="button" onClick={this.draw}>Draw</button>
                 </div>
             )
+
+            //TODO: render differently for teamates, opposite team
+            
         }
     }
 

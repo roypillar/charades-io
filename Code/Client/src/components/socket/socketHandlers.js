@@ -29,12 +29,16 @@ export function setupSocketHandlers(component) {
         console.log('Incoming message:', data);
     });
 
-    socket.on('player_joined_team', (data) => {
+    socket.on('players_update', (data) => {
         component.setState({teams: data});
     });
 
     socket.on('game_started', () =>{
         component.setState({started: true});
+    });
+
+    socket.on('timer_start', () => {
+        component.setState({startTimer: true})
     });
 }
 

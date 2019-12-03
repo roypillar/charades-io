@@ -54,6 +54,7 @@ function onConnect(socket) {
         //TODO: check room availability
     
         socket.join(roomId);
+        socket.emit('players_update', rooms.get(roomId).getAllPlayers());
 
     })
 
@@ -64,7 +65,7 @@ function onConnect(socket) {
         room.joinTeam(socket.userName,teamKey);
 
         // broadcast to all the clients in the room of the change 
-        io.to(socket.roomId).emit('player_joined_team', room.getAllPlayers());
+        io.to(socket.roomId).emit('players_update', room.getAllPlayers());
     });
 
     //todo : prevent creation of same name rooms, same users
@@ -90,6 +91,12 @@ function onConnect(socket) {
     socket.on('start_game', () => {
         rooms.get(socket.roomId).gameStart();
         io.to(socket.roomId).emit('game_started');
+    })
+
+    socket.on('draw', () => {
+        io.to(socket.roomId).emit('timer_start')
+        //TODO: select a note
+        //TODO: send the note back to the current mimer client
     })
 };
 
