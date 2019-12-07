@@ -35,6 +35,7 @@ export class Timer extends React.Component {
   }
 
   stopTimer() {
+    console.log('STOP TIMER')
     this.setState({isOn: false})
     clearInterval(this.timer)
   }
@@ -60,7 +61,7 @@ export class Timer extends React.Component {
     //   null :
     //   <button onClick={this.resetTimer}>reset</button>
     
-   
+    //TODO: this is bad, when timer reaches zero, startTimer() is called again
     //this can't be right, find another way to start the timer 
     if(this.props.startTimer && !this.state.isOn){
         this.startTimer();

@@ -32,7 +32,7 @@ class Game extends Component {
                     team1: [],
                     team2: []
                 },
-                note: '',
+                card: '',
                 redirect: false,
                 cameFrom: this.props.location.state.cameFrom,
                 error: null
@@ -83,8 +83,6 @@ class Game extends Component {
         setupSocketHandlers(this);
     }
 
-
-
     onJoinTeam(teamNumber) {
         //notify server
         this.state.socket.emit('join_team',teamNumber);
@@ -92,16 +90,16 @@ class Game extends Component {
 
     handleNoteChange(e){
         e.preventDefault();
-        this.setState({note: e.target.value});
+        this.setState({card: e.target.value});
     }
 
     submitNote(e){
         e.preventDefault();
-        const note = this.state.note;
-        this.state.socket.emit('new_note', note);
+        const card = this.state.card;
+        this.state.socket.emit('new_card', card);
         
         //clear input field
-        this.setState({note: ''});
+        this.setState({card: ''});
     }
 
     startGame(e){
@@ -112,7 +110,9 @@ class Game extends Component {
     
     draw(e){
         e.preventDefault();
-        this.state.socket.emit('draw');
+        this.state.socket.emit('draw', (newCard) => {
+            this.setState({card: newCard});
+        });
     }
 
     renderGame() {
@@ -122,7 +122,7 @@ class Game extends Component {
                     <Teams  teams={this.state.teams} onJoinTeam={this.onJoinTeam.bind(this)} />
 
                     <form onSubmit={this.submitNote.bind(this)}>
-                        <input name="note" value={this.state.note} placeholder="new note" onChange={this.handleNoteChange}/>
+                        <input name="card" value={this.state.card} placeholder="new card" onChange={this.handleNoteChange}/>
                         <button type="submit">Submit</button>
                     </form>
                     <button type="button" onClick={this.startGame}>Start</button> 
@@ -136,6 +136,8 @@ class Game extends Component {
                 <div>
                     <h1>game phase</h1>
                     <Timer startTimer={this.state.startTimer}></Timer>
+                    <h2>Mime this:</h2>
+                    <h2>{this.state.card}</h2>
                     <button type="button" onClick={this.draw}>Draw</button>
                 </div>
             )

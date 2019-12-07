@@ -84,8 +84,8 @@ function onConnect(socket) {
         console.log(`disconnection: ${connections.length} connections`);
     })
 
-    socket.on('new_note', function (note) {
-        let noteNum = rooms.get(socket.roomId).addNote(note);
+    socket.on('new_card', function (card) {
+        let noteNum = rooms.get(socket.roomId).addCard(card);
     })
 
     socket.on('start_game', () => {
@@ -93,10 +93,19 @@ function onConnect(socket) {
         io.to(socket.roomId).emit('game_started');
     })
 
-    socket.on('draw', () => {
+    socket.on('draw', (callback) => {
+        const card = rooms.get(socket.roomId).drawCard();
+        console.log('drew :' + card);
+        callback(card);
+
+        if(card === null){
+            socket.emit('some_error', 'No more cards to draw.');
+            return;
+        }
+        
         io.to(socket.roomId).emit('timer_start')
-        //TODO: select a note
-        //TODO: send the note back to the current mimer client
+        //TODO: select a card
+        //TODO: send the card back to the current mimer client
     })
 };
 
