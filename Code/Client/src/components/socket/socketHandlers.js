@@ -38,6 +38,7 @@ export function setupSocketHandlers(component) {
     });
 
     socket.on('timer_start', () => {
+        console.log("timer_start")
         component.setState({startTimer: true})
     });
 }

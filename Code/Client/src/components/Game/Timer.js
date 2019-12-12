@@ -5,8 +5,9 @@ export class Timer extends React.Component {
     super(props)
     this.state = {
       time: 60,
-      isOn: this.props.timerStarted,
-      start: 0
+      isOn: false,
+      start: 0,
+      mimer: false
     }
 
     this.startTimer = this.startTimer.bind(this)
@@ -16,11 +17,7 @@ export class Timer extends React.Component {
   }
 
   startTimer() {
-    this.setState({
-      isOn: true,
-      //time: this.state.time,
-      //start: Date.now() - this.state.time
-    })
+    this.setState({isOn: true})
     
     this.timer = setInterval(() => {
         this.setState({
@@ -36,7 +33,6 @@ export class Timer extends React.Component {
 
   stopTimer() {
     console.log('STOP TIMER')
-    this.setState({isOn: false})
     clearInterval(this.timer)
   }
 
@@ -44,10 +40,14 @@ export class Timer extends React.Component {
     this.setState({time: 60, isOn: false})
   }
 
+  componentDidUpdate(prevProps){
+
+    if(this.props.startTimer !== prevProps.startTimer){
+      this.startTimer();
+    }
+  }
+
   render() {
-    // let start = (!this.state.isOn) ?
-    //   <button onClick={this.startTimer}>start</button> :
-    //   null
 
     // let stop = (this.state.time === 0 || !this.state.isOn) ?
     //   null :
@@ -63,17 +63,10 @@ export class Timer extends React.Component {
     
     //TODO: this is bad, when timer reaches zero, startTimer() is called again
     //this can't be right, find another way to start the timer 
-    if(this.props.startTimer && !this.state.isOn){
-        this.startTimer();
-    }
 
     return(
       <div>
         <h3>timer: {this.state.time}</h3>
-        {/* {start}
-        {resume}
-        {stop}
-        {reset} */}
       </div>
     )
   }
